@@ -19,7 +19,7 @@ public class Room {
     private double price;
     @OneToMany
     @JsonManagedReference("roomRes - room")
-    private List<RoomRes> roomResList;
+    private List<RoomRes> ReservationList;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -34,12 +34,12 @@ public class Room {
     public Room() {
     }
 
-    public Room(Long id, String roomNo, Availability availability, double price, List<RoomRes> roomResList, Hotel hotel, RoomRes roomRes) {
+    public Room(Long id, String roomNo, Availability availability, double price, List<RoomRes> ReservationList, Hotel hotel, RoomRes roomRes) {
         this.id = id;
         this.roomNo = roomNo;
         this.availability = availability;
         this.price = price;
-        this.roomResList = roomResList;
+        this.ReservationList = ReservationList;
         this.hotel = hotel;
         this.roomRes = roomRes;
     }
@@ -76,12 +76,12 @@ public class Room {
         this.price = price;
     }
 
-    public List<RoomRes> getRoomResList() {
-        return roomResList;
+    public List<RoomRes> getReservationList() {
+        return ReservationList;
     }
 
-    public void setRoomResList(List<RoomRes> roomResList) {
-        this.roomResList = roomResList;
+    public void setReservationList(List<RoomRes> roomResList) {
+        this.ReservationList = roomResList;
     }
 
     public Hotel getHotel() {
@@ -107,7 +107,7 @@ public class Room {
                 ", roomNo='" + roomNo + '\'' +
                 ", availability=" + availability +
                 ", price=" + price +
-                ", roomResList=" + roomResList +
+                ", roomResList=" + ReservationList +
                 ", hotel=" + hotel +
                 ", roomRes=" + roomRes +
                 '}';
