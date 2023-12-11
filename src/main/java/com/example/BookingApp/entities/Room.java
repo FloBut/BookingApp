@@ -13,13 +13,16 @@ public class Room {
     private Long id;
     @Column
     private String roomNo;
+    @Enumerated(EnumType.STRING)
     @Column
     private Availability availability;
     @Column
     private double price;
-    @OneToMany
+    @Column
+    private Long noPersonsInRoom;
+    @OneToMany(mappedBy = "room", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("roomRes - room")
-    private List<RoomRes> ReservationList;
+    private List<RoomRes> roomRes2;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -34,14 +37,11 @@ public class Room {
     public Room() {
     }
 
-    public Room(Long id, String roomNo, Availability availability, double price, List<RoomRes> ReservationList, Hotel hotel, RoomRes roomRes) {
-        this.id = id;
+    public Room(String roomNo, Availability availability, double price, Long noPersonsInRoom) {
         this.roomNo = roomNo;
         this.availability = availability;
         this.price = price;
-        this.ReservationList = ReservationList;
-        this.hotel = hotel;
-        this.roomRes = roomRes;
+        this.noPersonsInRoom = noPersonsInRoom;
     }
 
     public Long getId() {
@@ -72,16 +72,25 @@ public class Room {
         return price;
     }
 
+
     public void setPrice(double price) {
         this.price = price;
     }
 
+    public Long getNoPersonsInRoom() {
+        return noPersonsInRoom;
+    }
+
+    public void setNoPersonsInRoom(Long noPersonsInRoom) {
+        this.noPersonsInRoom = noPersonsInRoom;
+    }
+
     public List<RoomRes> getReservationList() {
-        return ReservationList;
+        return roomRes2;
     }
 
     public void setReservationList(List<RoomRes> roomResList) {
-        this.ReservationList = roomResList;
+        this.roomRes2 = roomResList;
     }
 
     public Hotel getHotel() {
@@ -107,7 +116,7 @@ public class Room {
                 ", roomNo='" + roomNo + '\'' +
                 ", availability=" + availability +
                 ", price=" + price +
-                ", roomResList=" + ReservationList +
+                ", roomResList=" + roomRes2 +
                 ", hotel=" + hotel +
                 ", roomRes=" + roomRes +
                 '}';

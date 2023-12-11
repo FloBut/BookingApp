@@ -1,8 +1,6 @@
 package com.example.BookingApp.dtos;
 
 import com.example.BookingApp.entities.Availability;
-import jakarta.persistence.Column;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration;
 
 public class RoomRequestDTO {
     private Long id;

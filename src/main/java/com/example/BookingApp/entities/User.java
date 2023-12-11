@@ -13,6 +13,7 @@ public class User {
     private Long id;
     @Column
     private String name;
+    @Enumerated(EnumType.STRING)
     @Column
     private Role role;
 
@@ -28,12 +29,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, Role role, List<Hotel> hotels, List<Hotel> reservation) {
-        this.id = id;
+    public User(String name, Role role) {
         this.name = name;
         this.role = role;
-        this.hotels = hotels;
-        this.reservation = reservation;
     }
 
     public Long getId() {

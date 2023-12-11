@@ -21,7 +21,7 @@ public class Reservation {
     private Date endDate;
     @Column
     private Date createDateRes;
-    @OneToMany
+    @OneToMany(mappedBy = "reservation", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("roomRes - reservation")
     private List<RoomRes> roomRes1;
 
@@ -33,13 +33,11 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Long id, Long reservationNo, Date startDate, Date endDate, Date createDateRes, List<RoomRes> roomRes1, User user) {
-        this.id = id;
+    public Reservation(Long reservationNo, Date startDate, Date endDate, Date createDateRes, User user) {
         this.reservationNo = reservationNo;
         this.startDate = startDate;
         this.endDate = endDate;
         this.createDateRes = createDateRes;
-        this.roomRes1 = roomRes1;
         this.user = user;
     }
 
