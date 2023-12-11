@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,11 +30,11 @@ public class Hotel {
     public Hotel() {
     }
 
-    public Hotel(String name, String address, User user, List<Room> rooms) {
+    public Hotel(String name, String address, User user) {
         this.name = name;
         this.address = address;
         this.user = user;
-        this.rooms = rooms;
+        this.rooms = new ArrayList<>();
     }
 
     public Long getId() {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,11 +30,6 @@ public class Room {
     @JsonBackReference("hotel - room")
     private Hotel hotel;
 
-    @ManyToOne
-    @JoinColumn(name = "roomRes_id")
-    @JsonBackReference("roomRes - room")
-    private RoomRes roomRes;
-
     public Room() {
     }
 
@@ -42,6 +38,7 @@ public class Room {
         this.availability = availability;
         this.price = price;
         this.noPersonsInRoom = noPersonsInRoom;
+        this.roomRes2 = new ArrayList<>();
     }
 
     public Long getId() {
@@ -101,12 +98,13 @@ public class Room {
         this.hotel = hotel;
     }
 
-    public RoomRes getRoomRes() {
-        return roomRes;
+    public List<RoomRes> getRoomRes() {
+        return roomRes2;
     }
 
-    public void setRoomRes(RoomRes roomRes) {
-        this.roomRes = roomRes;
+    public void setRoomRes(List<RoomRes> roomRes) {
+
+        this.roomRes2 = roomRes;
     }
 
     @Override
@@ -118,7 +116,7 @@ public class Room {
                 ", price=" + price +
                 ", roomResList=" + roomRes2 +
                 ", hotel=" + hotel +
-                ", roomRes=" + roomRes +
+                ", roomRes2=" + roomRes2 +
                 '}';
     }
 }
