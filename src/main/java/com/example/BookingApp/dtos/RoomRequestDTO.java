@@ -3,18 +3,26 @@ package com.example.BookingApp.dtos;
 import com.example.BookingApp.entities.Availability;
 
 public class RoomRequestDTO {
-    private Long id;
-    private String roomNo;
-    private Availability availability;
-    private double price;
-    private String hotelName;
 
-    public RoomRequestDTO(Long id, String roomNo, Availability availability, double price, String hotelName) {
+    private Long id;
+
+    private Long roomNumber;
+
+    private Double pricePerNight;
+
+    private Integer guestNumber;
+
+    // private Long hotelId;
+
+    public RoomRequestDTO(Long id, Long roomNumber, Double pricePerNight, Integer guestNumber) {
         this.id = id;
-        this.roomNo = roomNo;
-        this.availability = availability;
-        this.price = price;
-        this.hotelName = hotelName;
+        this.roomNumber = roomNumber;
+        this.pricePerNight = pricePerNight;
+        this.guestNumber = guestNumber;
+        // this.hotelId = hotelId;
+    }
+
+    public RoomRequestDTO() {
     }
 
     public Long getId() {
@@ -25,35 +33,35 @@ public class RoomRequestDTO {
         this.id = id;
     }
 
-    public String getRoomNo() {
-        return roomNo;
+    public Long getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setRoomNo(String roomNo) {
-        this.roomNo = roomNo;
+    public void setRoomNumber(Long roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
-    public Availability getAvailability() {
-        return availability;
+    public Double getPricePerNight() {
+        return pricePerNight;
     }
 
-    public void setAvailability(Availability availability) {
-        this.availability = availability;
+    public void setPricePerNight(Double pricePerNight) {
+        this.pricePerNight = pricePerNight;
     }
 
-    public double getPrice() {
-        return price;
+    public Integer getGuestNumber() {
+        return guestNumber;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setGuestNumber(Integer guestNumber) {
+        this.guestNumber = guestNumber;
     }
 
-    public String getHotelName() {
-        return hotelName;
-    }
-
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
-    }
+//    public Long getHotelId() {
+//        return hotelId;
+//    }
+//
+//    public void setHotelId(Long hotelId) {
+//        this.hotelId = hotelId;
+//    }
 }

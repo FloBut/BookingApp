@@ -2,111 +2,67 @@ package com.example.BookingApp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Reservation {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private Long reservationNo;
-    @Column
-    private Date startDate;
-    @Column
-    private Date endDate;
-    @Column
-    private Date createDateRes;
+    @Column(nullable = false)
+    @NotNull(message = "Check-in date cannot be null")
+    @FutureOrPresent(message = "Check-in date must be in the present or future")
+    private LocalDate checkIn;
+
+    @Column(nullable = false)
+    @NotNull(message = "Check-out date cannot be null")
+    @FutureOrPresent(message = "Check-out date must be in the present or future")
+    private LocalDate checkOut;
+
     @OneToMany(mappedBy = "reservation", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JsonManagedReference("roomRes - reservation")
-    private List<RoomRes> roomRes1;
+    @JsonManagedReference("reservation-roomreservation")
+    @Builder.Default
+    private List<RoomReservation> roomReservationList = new ArrayList<>();
+
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference("user_id - reservation")
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "Reservation must be associated with a user")
+    @JsonBackReference("user-reservation")
     private User user;
 
-    public Reservation() {
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    // Helper methods to manage the bidirectional relationship
+    public void addRoomReservation(RoomReservation roomReservation) {
+        roomReservation.setReservation(this);
+        roomReservationList.add(roomReservation);
     }
 
-    public Reservation(Long reservationNo, Date startDate, Date endDate, Date createDateRes, User user) {
-        this.reservationNo = reservationNo;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.createDateRes = createDateRes;
-        this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getReservationNo() {
-        return reservationNo;
-    }
-
-    public void setReservationNo(Long reservationNo) {
-        this.reservationNo = reservationNo;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getCreateDateRes() {
-        return createDateRes;
-    }
-
-    public void setCreateDateRes(Date createDateRes) {
-        this.createDateRes = createDateRes;
-    }
-
-    public List<RoomRes> getRoomRes1() {
-        return roomRes1;
-    }
-
-    public void setRoomRes1(List<RoomRes> roomRes1) {
-        this.roomRes1 = roomRes1;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", reservationNo=" + reservationNo +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", createDateRes=" + createDateRes +
-                ", roomRes1=" + roomRes1 +
-                ", user=" + user +
-                '}';
+    public void removeRoomReservation(RoomReservation roomReservation) {
+        roomReservation.setReservation(null);
+        roomReservationList.remove(roomReservation);
     }
 }

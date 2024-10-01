@@ -3,120 +3,65 @@ package com.example.BookingApp.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data // generates getter, setter, to string, equals(), hashCode() (the same hash code if two objects are equals)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder //permit tu use builder pattern to create Role
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    @NotNull(message = "Room no can't be null")
+    @Min(value = 1, message = "Room number must be greater then 1")
+    private Long roomNumber;
+
     @Column
-    private String roomNo;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private Availability availability;
-    @Column
-    private double price;
-    @Column
-    private Long noPersonsInRoom;
-    @OneToMany(mappedBy = "room", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JsonManagedReference("roomRes - room")
-    private List<RoomRes> roomRes2;
+    @NotNull(message = "Price per night can't be null")
+    @Positive(message = "Price per night must be a positive number")
+    private Double pricePerNight;
+
+
+    @Column(nullable = false)
+    @NotNull(message = "Guest number cannot be null")
+    @Min(value = 1, message = "Guest number must be at least 1")
+    private Integer guestNumber;
+
+    @OneToMany(mappedBy = "room",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @JsonManagedReference("roomreserv-room")
+    @Builder.Default
+    List<RoomReservation> roomReservationList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
-    @JsonBackReference("hotel - room")
+    @JsonBackReference("hotel-room")
     private Hotel hotel;
 
-    public Room() {
-    }
-
-    public Room(String roomNo, Availability availability, double price, Long noPersonsInRoom) {
-        this.roomNo = roomNo;
-        this.availability = availability;
-        this.price = price;
-        this.noPersonsInRoom = noPersonsInRoom;
-        this.roomRes2 = new ArrayList<>();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRoomNo() {
-        return roomNo;
-    }
-
-    public void setRoomNo(String roomNo) {
-        this.roomNo = roomNo;
-    }
-
-    public Availability getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Availability availability) {
-        this.availability = availability;
-    }
-
-    public double getPrice() {
-        return price;
-    }
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Availability availability;
 
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public Long getNoPersonsInRoom() {
-        return noPersonsInRoom;
-    }
-
-    public void setNoPersonsInRoom(Long noPersonsInRoom) {
-        this.noPersonsInRoom = noPersonsInRoom;
-    }
-
-    public List<RoomRes> getReservationList() {
-        return roomRes2;
-    }
-
-    public void setReservationList(List<RoomRes> roomResList) {
-        this.roomRes2 = roomResList;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
+    public Room(Long roomNumber, Double pricePerNight, Integer guestNumber, Hotel hotel) {
+        this.roomNumber = roomNumber;
+        this.pricePerNight = pricePerNight;
+        this.guestNumber = guestNumber;
         this.hotel = hotel;
+        roomReservationList = new ArrayList<>();
     }
 
-    public List<RoomRes> getRoomRes() {
-        return roomRes2;
-    }
 
-    public void setRoomRes(List<RoomRes> roomRes) {
-
-        this.roomRes2 = roomRes;
-    }
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", roomNo='" + roomNo + '\'' +
-                ", availability=" + availability +
-                ", price=" + price +
-                ", roomResList=" + roomRes2 +
-                ", hotel=" + hotel +
-                ", roomRes2=" + roomRes2 +
-                '}';
-    }
 }

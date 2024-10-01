@@ -3,36 +3,38 @@ package com.example.BookingApp.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //un user poate fi si client si administrator
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "user",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @JsonManagedReference("user-reservation")
+    private List<Reservation> reservations;
+
     @Column
     private String name;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JsonManagedReference("user - hotel")
-    private List <Hotel> hotels;
-
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JsonManagedReference("user - reservation")
-    private List <Hotel> reservation;
-
+    @ManyToMany(mappedBy ="users",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonManagedReference("users-roles")
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String name, Role role) {
+    public User(String name) {
         this.name = name;
-        this.role = role;
+        this.reservations = new ArrayList<>();
+        this.roles = new HashSet<>();
     }
+
 
     public Long getId() {
         return id;
@@ -40,6 +42,17 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Reservation> getReservations() {
+        if(reservations==null){
+            reservations = new ArrayList<>();
+        }
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public String getName() {
@@ -50,38 +63,11 @@ public class User {
         this.name = name;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public List<Hotel> getHotels() {
-        return hotels;
-    }
-
-    public void setHotels(List<Hotel> hotels) {
-        this.hotels = hotels;
-    }
-
-    public List<Hotel> getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(List<Hotel> reservation) {
-        this.reservation = reservation;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", role=" + role +
-                ", hotels=" + hotels +
-                ", reservation=" + reservation +
-                '}';
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

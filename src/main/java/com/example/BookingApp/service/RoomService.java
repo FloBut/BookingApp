@@ -5,33 +5,44 @@ import com.example.BookingApp.dtos.RoomRequestDTO;
 import com.example.BookingApp.entities.Hotel;
 import com.example.BookingApp.entities.Room;
 import com.example.BookingApp.exceptions.ResourceNotFoundException;
-import org.springframework.web.server.ResponseStatusException;
 import com.example.BookingApp.repository.HotelRepository;
 import com.example.BookingApp.repository.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
-import java.util.function.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
-    private RoomRepository roomRepository;
-    private HotelRepository hotelRepository;
+    RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository, HotelRepository hotelRepository) {
+    ReservationService reservationService;
+    @Autowired
+    public RoomService(RoomRepository roomRepository, ReservationService reservationService) {
         this.roomRepository = roomRepository;
-        this.hotelRepository = hotelRepository;
+        this.reservationService = reservationService;
     }
-@Transactional
-    public Room addRoomToHotel(RoomRequestDTO roomRequestDTO) {
-        //caut in baza de date numele hotelului si in lista lui de camere adaug camera
-    Hotel hotelFoundedInDataBase = hotelRepository.findById(roomRequestDTO.getId())
-            .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
-        Room roomToBeSaved = new Room();
-        roomToBeSaved.setRoomNo(roomRequestDTO.getRoomNo());
-        roomToBeSaved.setAvailability(roomRequestDTO.getAvailability());
-        roomToBeSaved.setPrice(roomRequestDTO.getPrice());
-        roomToBeSaved.setHotel(hotelFoundedInDataBase);
-        return roomRepository.save(roomToBeSaved);
+
+    public List<Room> getAvailableRoomsBy(LocalDate checkIn, LocalDate checkOut, Integer numberOfPersons){
+        List<Room> foundRooms = roomRepository.findAllByGuestNumber(numberOfPersons);
+        return foundRooms.stream()
+                .filter(room -> isAvailable(room, checkIn, checkOut))
+                .collect(Collectors.toList());
+    }
+
+    public boolean isAvailable(Room room, LocalDate checkIn , LocalDate checkOut){
+        return room.getRoomReservationsList().stream()
+                .map(roomReservation -> roomReservation.getReservation())
+                .noneMatch(reservation -> reservationService.existReservationBetween(reservation,checkIn,checkOut));
+    }
+
+    public List<Room> getAvailableRoomsByPrice(LocalDate checkIn, LocalDate checkOut, Integer numberOfPersons){
+        List<Room> availableRooms = getAvailableRoomsBy(checkIn, checkOut, numberOfPersons);
+        return availableRooms.stream()
+                .sorted((r1,r2) -> Double.compare(r1.getPricePerNight(), r2.getPricePerNight()))
+                .collect(Collectors.toList());
     }
 }

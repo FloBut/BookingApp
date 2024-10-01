@@ -1,9 +1,13 @@
 package com.example.BookingApp.repository;
 
-import com.example.BookingApp.entities.Hotel;
+import com.example.BookingApp.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HotelRepository extends JpaRepository<Hotel, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
+
+
+
 }
