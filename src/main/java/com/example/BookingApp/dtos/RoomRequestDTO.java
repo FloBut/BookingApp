@@ -1,67 +1,34 @@
 package com.example.BookingApp.dtos;
 
-import com.example.BookingApp.entities.Availability;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class RoomRequestDTO {
 
+    @NotNull(message = "Id can't not be null")
     private Long id;
 
+    @NotNull
+    @Min(1)
     private Long roomNumber;
 
+    @NotNull
+    @Min(0)
     private Double pricePerNight;
 
+    @NotNull
+    @Min(1)
     private Integer guestNumber;
 
-    // private Long hotelId;
+    @NotNull
+    private Long HotelId;
 
-    public RoomRequestDTO(Long id, Long roomNumber, Double pricePerNight, Integer guestNumber) {
-        this.id = id;
-        this.roomNumber = roomNumber;
-        this.pricePerNight = pricePerNight;
-        this.guestNumber = guestNumber;
-        // this.hotelId = hotelId;
-    }
-
-    public RoomRequestDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(Long roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public Double getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public void setPricePerNight(Double pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
-
-    public Integer getGuestNumber() {
-        return guestNumber;
-    }
-
-    public void setGuestNumber(Integer guestNumber) {
-        this.guestNumber = guestNumber;
-    }
-
-//    public Long getHotelId() {
-//        return hotelId;
-//    }
-//
-//    public void setHotelId(Long hotelId) {
-//        this.hotelId = hotelId;
-//    }
 }

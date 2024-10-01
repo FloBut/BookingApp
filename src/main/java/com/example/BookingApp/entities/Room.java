@@ -46,22 +46,14 @@ public class Room {
     List<RoomReservation> roomReservationList = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "hotel_id", nullable = false)
     @JsonBackReference("hotel-room")
+    @NotNull(message = "Hotel can't be null")
     private Hotel hotel;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Availability status can't be null")
     private Availability availability;
-
-
-    public Room(Long roomNumber, Double pricePerNight, Integer guestNumber, Hotel hotel) {
-        this.roomNumber = roomNumber;
-        this.pricePerNight = pricePerNight;
-        this.guestNumber = guestNumber;
-        this.hotel = hotel;
-        roomReservationList = new ArrayList<>();
-    }
-
 
 }

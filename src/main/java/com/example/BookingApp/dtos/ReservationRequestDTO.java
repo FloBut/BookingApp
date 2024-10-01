@@ -1,54 +1,33 @@
 package com.example.BookingApp.dtos;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ReservationRequestDTO {
-
+    @NotEmpty(message = "Room Ids can't not be empty")
     private Set<Long> roomIds;
+
+    @NotNull(message = "Check - in date can't be null")
+    @Future(message = "Check - in date must be in the future")
     private LocalDate checkIn;
 
+    @NotNull(message = "Check-out date cannot be null")
+    @Future(message = "Check-out date must be in the future")
     private LocalDate checkOut;
 
+    @NotNull(message = "UserId can;t be null")
     private Long userId;
 
-    public ReservationRequestDTO(Set<Long> roomIds, LocalDate checkIn, LocalDate checkOut, Long userId) {
-        this.roomIds = roomIds;
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
-        this.userId = userId;
-    }
-
-    public Set<Long> getRoomIds() {
-        return roomIds;
-    }
-
-    public void setRoomIds(Set<Long> roomIds) {
-        this.roomIds = roomIds;
-    }
-
-    public LocalDate getCheckIn() {
-        return checkIn;
-    }
-
-    public void setCheckIn(LocalDate checkIn) {
-        this.checkIn = checkIn;
-    }
-
-    public LocalDate getCheckOut() {
-        return checkOut;
-    }
-
-    public void setCheckOut(LocalDate checkOut) {
-        this.checkOut = checkOut;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }
